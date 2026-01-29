@@ -1,5 +1,5 @@
 import { useLocation, NavLink as RouterNavLink } from "react-router-dom";
-import { Diamond, LayoutGrid, Package, Gavel, MessageSquare, Bell, User, TrendingUp, Star, Settings } from "lucide-react";
+import { Diamond, Package, Gavel, MessageSquare, Bell, User, Settings, Gem, Heart, ShoppingBag } from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
@@ -15,21 +15,23 @@ import {
 } from "@/components/ui/sidebar";
 import { cn } from "@/lib/utils";
 import { useMock } from "@/contexts/MockContext";
-import { Badge } from "@/components/ui/badge";
 
 // Navigation items structure
 const mainNavItems = [
-  { title: "Listings", url: "/listings", icon: LayoutGrid },
-  { title: "Marketplace", url: "/marketplace", icon: TrendingUp },
-  { title: "Inventory", url: "/inventory", icon: Package },
-  { title: "Bids & Deals", url: "/bids", icon: Gavel },
-  { title: "Chat", url: "/chat", icon: MessageSquare, badge: 3 },
-  { title: "Notifications", url: "/notifications", icon: Bell, badge: 3 },
+  { title: "Listings", url: "/listings", icon: ShoppingBag, description: "Your active listings" },
+  { title: "Marketplace", url: "/marketplace", icon: Gem, description: "Browse all diamonds" },
+  { title: "Inventory", url: "/inventory", icon: Package, description: "Manage your stock" },
+  { title: "Bids & Deals", url: "/bids", icon: Gavel, description: "Track negotiations" },
+];
+
+const communicationItems = [
+  { title: "Chat", url: "/chat", icon: MessageSquare, badge: 2 },
+  { title: "Notifications", url: "/notifications", icon: Bell, badge: 5 },
 ];
 
 const accountNavItems = [
   { title: "Profile", url: "/profile", icon: User },
-  { title: "Preferences", url: "/preferences", icon: Star },
+  { title: "Preferences", url: "/preferences", icon: Heart },
   { title: "Settings", url: "/settings", icon: Settings },
 ];
 
@@ -42,27 +44,27 @@ export function AppSidebar() {
   const isActive = (path: string) => location.pathname.startsWith(path);
 
   return (
-    <Sidebar collapsible="icon" className="border-r border-sidebar-border">
+    <Sidebar collapsible="icon" className="border-r-0">
       {/* Logo / Brand */}
-      <SidebarHeader className="border-b border-sidebar-border">
-        <div className="flex items-center gap-3 px-2 py-3">
-          <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary text-primary-foreground">
-            <Diamond className="h-5 w-5" />
+      <SidebarHeader className="border-b border-sidebar-border/50">
+        <div className="flex items-center gap-3 px-3 py-4">
+          <div className="flex h-10 w-10 items-center justify-center rounded-xl gradient-bg shadow-glow">
+            <Diamond className="h-5 w-5 text-white" />
           </div>
           {!isCollapsed && (
             <div className="flex flex-col">
-              <span className="text-sm font-semibold text-sidebar-foreground">Reyu Diamond</span>
-              <span className="text-xs text-muted-foreground">Trading Platform</span>
+              <span className="text-sm font-semibold text-sidebar-foreground font-serif tracking-tight">Reyu Diamond</span>
+              <span className="text-xs text-sidebar-foreground/50">Trading Platform</span>
             </div>
           )}
         </div>
       </SidebarHeader>
 
-      <SidebarContent>
+      <SidebarContent className="px-2">
         {/* Main Navigation */}
-        <SidebarGroup>
-          <SidebarGroupLabel className="text-xs font-medium text-muted-foreground">
-            {!isCollapsed && "Main Menu"}
+        <SidebarGroup className="mt-4">
+          <SidebarGroupLabel className="text-sidebar-foreground/40 text-xs font-medium uppercase tracking-wider px-3 mb-2">
+            {!isCollapsed && "Trading"}
           </SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
@@ -72,24 +74,56 @@ export function AppSidebar() {
                     asChild
                     isActive={isActive(item.url)}
                     tooltip={item.title}
+                    className="h-11 rounded-xl transition-all duration-200"
                   >
                     <RouterNavLink
                       to={item.url}
                       className={cn(
-                        "relative flex items-center gap-3",
-                        isActive(item.url) && "font-medium"
+                        "flex items-center gap-3 text-sidebar-foreground/70 hover:text-sidebar-foreground hover:bg-sidebar-accent/50",
+                        isActive(item.url) && "bg-sidebar-accent text-sidebar-accent-foreground shadow-soft font-medium"
                       )}
                     >
-                      <item.icon className="h-4 w-4 shrink-0" />
+                      <item.icon className="h-5 w-5 shrink-0" />
                       {!isCollapsed && <span>{item.title}</span>}
-                      {!isCollapsed && item.badge && (
-                        <Badge 
-                          variant="secondary" 
-                          className="ml-auto h-5 min-w-5 rounded-full bg-accent text-accent-foreground text-xs"
-                        >
-                          {item.badge}
-                        </Badge>
+                    </RouterNavLink>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              ))}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+
+        {/* Communication */}
+        <SidebarGroup className="mt-6">
+          <SidebarGroupLabel className="text-sidebar-foreground/40 text-xs font-medium uppercase tracking-wider px-3 mb-2">
+            {!isCollapsed && "Communication"}
+          </SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              {communicationItems.map((item) => (
+                <SidebarMenuItem key={item.title}>
+                  <SidebarMenuButton
+                    asChild
+                    isActive={isActive(item.url)}
+                    tooltip={item.title}
+                    className="h-11 rounded-xl transition-all duration-200"
+                  >
+                    <RouterNavLink
+                      to={item.url}
+                      className={cn(
+                        "flex items-center gap-3 text-sidebar-foreground/70 hover:text-sidebar-foreground hover:bg-sidebar-accent/50",
+                        isActive(item.url) && "bg-sidebar-accent text-sidebar-accent-foreground shadow-soft font-medium"
                       )}
+                    >
+                      <div className="relative">
+                        <item.icon className="h-5 w-5 shrink-0" />
+                        {item.badge && item.badge > 0 && (
+                          <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-accent text-[10px] font-semibold flex items-center justify-center text-white">
+                            {item.badge}
+                          </span>
+                        )}
+                      </div>
+                      {!isCollapsed && <span>{item.title}</span>}
                     </RouterNavLink>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
@@ -99,8 +133,8 @@ export function AppSidebar() {
         </SidebarGroup>
 
         {/* Account Navigation */}
-        <SidebarGroup>
-          <SidebarGroupLabel className="text-xs font-medium text-muted-foreground">
+        <SidebarGroup className="mt-6">
+          <SidebarGroupLabel className="text-sidebar-foreground/40 text-xs font-medium uppercase tracking-wider px-3 mb-2">
             {!isCollapsed && "Account"}
           </SidebarGroupLabel>
           <SidebarGroupContent>
@@ -111,15 +145,16 @@ export function AppSidebar() {
                     asChild
                     isActive={isActive(item.url)}
                     tooltip={item.title}
+                    className="h-11 rounded-xl transition-all duration-200"
                   >
                     <RouterNavLink
                       to={item.url}
                       className={cn(
-                        "flex items-center gap-3",
-                        isActive(item.url) && "font-medium"
+                        "flex items-center gap-3 text-sidebar-foreground/70 hover:text-sidebar-foreground hover:bg-sidebar-accent/50",
+                        isActive(item.url) && "bg-sidebar-accent text-sidebar-accent-foreground shadow-soft font-medium"
                       )}
                     >
-                      <item.icon className="h-4 w-4 shrink-0" />
+                      <item.icon className="h-5 w-5 shrink-0" />
                       {!isCollapsed && <span>{item.title}</span>}
                     </RouterNavLink>
                   </SidebarMenuButton>
@@ -131,17 +166,17 @@ export function AppSidebar() {
       </SidebarContent>
 
       {/* User Footer */}
-      <SidebarFooter className="border-t border-sidebar-border">
-        <div className="flex items-center gap-3 px-2 py-3">
-          <div className="flex h-9 w-9 items-center justify-center rounded-full bg-muted text-muted-foreground">
-            <User className="h-4 w-4" />
+      <SidebarFooter className="border-t border-sidebar-border/50 p-4">
+        <div className="flex items-center gap-3">
+          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-sidebar-accent text-sm font-semibold text-sidebar-accent-foreground">
+            {currentUser ? `${currentUser.firstName[0]}${currentUser.lastName[0]}` : "U"}
           </div>
           {!isCollapsed && currentUser && (
-            <div className="flex flex-col overflow-hidden">
+            <div className="flex flex-col overflow-hidden flex-1 min-w-0">
               <span className="truncate text-sm font-medium text-sidebar-foreground">
                 {currentUser.firstName} {currentUser.lastName}
               </span>
-              <span className="truncate text-xs text-muted-foreground">
+              <span className="truncate text-xs text-sidebar-foreground/50">
                 {currentUser.companyName}
               </span>
             </div>

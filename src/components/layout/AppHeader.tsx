@@ -1,4 +1,4 @@
-import { Menu, Bell, Search, ChevronDown } from "lucide-react";
+import { Bell, Search, ChevronDown, Diamond } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { SidebarTrigger } from "@/components/ui/sidebar";
@@ -16,18 +16,18 @@ import type { MockUserType } from "@/config/mockMode";
 
 // KYC Status badge component
 function KYCStatusBadge({ status }: { status: string }) {
-  const variants: Record<string, { className: string; label: string }> = {
-    pending: { className: "bg-warning/10 text-warning border-warning/30", label: "KYC Pending" },
-    under_review: { className: "bg-info/10 text-info border-info/30", label: "Under Review" },
-    approved: { className: "bg-success/10 text-success border-success/30", label: "Verified" },
-    rejected: { className: "bg-destructive/10 text-destructive border-destructive/30", label: "KYC Rejected" },
+  const variants: Record<string, { variant: "success" | "warning" | "destructive" | "info"; label: string }> = {
+    pending: { variant: "warning", label: "KYC Pending" },
+    under_review: { variant: "info", label: "Under Review" },
+    approved: { variant: "success", label: "Verified" },
+    rejected: { variant: "destructive", label: "KYC Rejected" },
   };
 
-  const variant = variants[status] || variants.pending;
+  const variantData = variants[status] || variants.pending;
 
   return (
-    <Badge variant="outline" className={variant.className}>
-      {variant.label}
+    <Badge variant={variantData.variant}>
+      {variantData.label}
     </Badge>
   );
 }
@@ -50,10 +50,11 @@ function MockUserSwitcher() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="outline" size="sm" className="gap-2 text-xs">
+        <Button variant="outline" size="sm" className="gap-2 text-xs border-dashed">
+          <Diamond className="h-3 w-3 text-accent" />
           <span className="font-medium">Mock:</span>
-          <span>{currentOption?.label}</span>
-          <ChevronDown className="h-3 w-3" />
+          <span className="text-muted-foreground">{currentOption?.label}</span>
+          <ChevronDown className="h-3 w-3 text-muted-foreground" />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-56">
@@ -65,7 +66,7 @@ function MockUserSwitcher() {
           <DropdownMenuItem
             key={option.type}
             onClick={() => setMockUserType(option.type)}
-            className="flex flex-col items-start gap-0.5"
+            className="flex flex-col items-start gap-0.5 cursor-pointer"
           >
             <span className="font-medium">{option.label}</span>
             <span className="text-xs text-muted-foreground">{option.description}</span>
@@ -80,24 +81,24 @@ export function AppHeader() {
   const { currentUser } = useMock();
 
   return (
-    <header className="sticky top-0 z-40 flex h-14 items-center gap-4 border-b border-border bg-background px-4">
+    <header className="sticky top-0 z-40 flex h-16 items-center gap-4 border-b border-border/50 bg-background/80 backdrop-blur-xl px-6">
       {/* Sidebar Toggle */}
-      <SidebarTrigger className="-ml-1" />
+      <SidebarTrigger className="-ml-2 hover:bg-accent/10" />
 
       {/* Search */}
       <div className="flex-1 max-w-md">
-        <div className="relative">
-          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+        <div className="relative group">
+          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground transition-colors group-focus-within:text-accent" />
           <Input
             type="search"
             placeholder="Search diamonds, listings, deals..."
-            className="pl-9 bg-muted/50 border-0 focus-visible:ring-1"
+            className="pl-10 bg-secondary/50 border-0 focus-visible:ring-1 focus-visible:ring-accent/50 rounded-xl h-10 transition-all duration-200"
           />
         </div>
       </div>
 
       {/* Right side actions */}
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-4">
         {/* Mock User Switcher (only in mock mode) */}
         <MockUserSwitcher />
 
@@ -105,9 +106,9 @@ export function AppHeader() {
         {currentUser && <KYCStatusBadge status={currentUser.kycStatus} />}
 
         {/* Notifications */}
-        <Button variant="ghost" size="icon" className="relative">
-          <Bell className="h-5 w-5" />
-          <span className="absolute -right-0.5 -top-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-accent text-[10px] font-medium text-accent-foreground">
+        <Button variant="ghost" size="icon" className="relative rounded-xl hover:bg-accent/10">
+          <Bell className="h-5 w-5 text-muted-foreground" />
+          <span className="absolute -right-0.5 -top-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-accent text-[10px] font-semibold text-white shadow-glow">
             3
           </span>
         </Button>
