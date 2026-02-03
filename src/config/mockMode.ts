@@ -16,12 +16,35 @@ export type MockUserType =
   | "kyc_pending"
   | "kyc_approved" 
   | "kyc_rejected"
-  | "suspended";
+  | "suspended"
+  | "admin";
 
 /**
  * Default mock user type on app load
  */
 export const DEFAULT_MOCK_USER: MockUserType = "kyc_approved";
+
+/**
+ * Labels for the mock user switcher dropdown
+ */
+export const MOCK_USER_LABELS: Record<MockUserType, string> = {
+  kyc_approved: "KYC Approved User",
+  kyc_pending: "KYC Pending User",
+  kyc_rejected: "KYC Rejected User",
+  suspended: "Suspended User",
+  admin: "Admin User",
+};
+
+/**
+ * Descriptions for each mock user type
+ */
+export const MOCK_USER_DESCRIPTIONS: Record<MockUserType, string> = {
+  kyc_approved: "Full trading access, can list and bid",
+  kyc_pending: "Limited access, awaiting verification",
+  kyc_rejected: "KYC rejected, needs to resubmit",
+  suspended: "Account suspended, no trading access",
+  admin: "Platform administrator with full access",
+};
 
 /**
  * Simulated API delay in milliseconds (for realistic loading states)

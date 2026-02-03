@@ -29,6 +29,9 @@ interface MockContextValue {
   // KYC helpers
   isKYCApproved: boolean;
   canTrade: boolean;
+  
+  // Admin helpers
+  isAdmin: boolean;
 }
 
 const MockContext = createContext<MockContextValue | null>(null);
@@ -91,6 +94,7 @@ export function MockProvider({ children }: MockProviderProps) {
   // Computed helpers
   const isKYCApproved = currentUser?.kycStatus === "approved";
   const canTrade = isKYCApproved && currentUser?.userStatus === "active";
+  const isAdmin = mockUserType === "admin";
 
   const value = useMemo<MockContextValue>(
     () => ({
@@ -105,6 +109,7 @@ export function MockProvider({ children }: MockProviderProps) {
       updateNotificationSettings,
       isKYCApproved,
       canTrade,
+      isAdmin,
     }),
     [
       currentUser,
@@ -117,6 +122,7 @@ export function MockProvider({ children }: MockProviderProps) {
       updateNotificationSettings,
       isKYCApproved,
       canTrade,
+      isAdmin,
     ]
   );
 

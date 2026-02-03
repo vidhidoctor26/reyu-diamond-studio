@@ -7,6 +7,8 @@ import { MockProvider } from "@/contexts/MockContext";
 import { AppLayout } from "@/components/layout";
 
 // Pages
+import DashboardPage from "@/pages/DashboardPage";
+import AdminDashboardPage from "@/pages/AdminDashboardPage";
 import ListingsPage from "@/pages/ListingsPage";
 import MarketplacePage from "@/pages/MarketplacePage";
 import InventoryPage from "@/pages/InventoryPage";
@@ -29,10 +31,11 @@ const App = () => (
         <BrowserRouter>
           <Routes>
             <Route element={<AppLayout />}>
-              {/* Redirect root to listings */}
-              <Route path="/" element={<Navigate to="/listings" replace />} />
+              {/* Redirect root to dashboard */}
+              <Route path="/" element={<Navigate to="/dashboard" replace />} />
               
               {/* Main routes */}
+              <Route path="/dashboard" element={<DashboardPage />} />
               <Route path="/listings" element={<ListingsPage />} />
               <Route path="/marketplace" element={<MarketplacePage />} />
               <Route path="/inventory" element={<InventoryPage />} />
@@ -42,6 +45,13 @@ const App = () => (
               <Route path="/profile" element={<ProfilePage />} />
               <Route path="/preferences" element={<PreferencesPage />} />
               <Route path="/settings" element={<SettingsPage />} />
+              
+              {/* Admin routes */}
+              <Route path="/admin" element={<AdminDashboardPage />} />
+              <Route path="/admin/users" element={<AdminDashboardPage />} />
+              <Route path="/admin/kyc" element={<AdminDashboardPage />} />
+              <Route path="/admin/disputes" element={<AdminDashboardPage />} />
+              <Route path="/admin/settings" element={<AdminDashboardPage />} />
             </Route>
             
             {/* 404 */}
